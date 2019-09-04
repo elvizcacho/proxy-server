@@ -11,7 +11,11 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function (req, res) {
-    delete req.headers.host
+
+    if (!req.query.url) {
+        return res.send('Use url query param to pass the url you want to send through the proxy server')
+    }
+
     const options = {
         url: req.query.url,
         headers: {
