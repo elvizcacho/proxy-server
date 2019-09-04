@@ -11,7 +11,6 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function (req, res) {
-    console.log(req.headers)
     delete req.headers.host
     const options = {
         url: req.query.url,
@@ -26,6 +25,6 @@ app.get('/', function (req, res) {
     });
 });
 
-app.listen(3000, function () {
+app.listen(80, function () {
     console.log('Example app listening on port 3000!');
 });

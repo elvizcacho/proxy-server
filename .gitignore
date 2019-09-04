@@ -2,6 +2,5 @@ node_modules
 .idea
 .dist
 dist
-dist/*
 proxy-server/node_modules
 .DS_Store
