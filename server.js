@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const request = require('request');
+const qs = require('qs')
 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -10,21 +11,23 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
 
-    if (!req.query.url) {
-        return res.send('Use url query param to pass the url you want to send through the proxy server')
+    if (!req.params[0]) {
+        return res.send('Please add an url after /')
     }
 
+    const url = `${req.params[0]}?${qs.stringify(req.query)}`
+
     const options = {
-        url: req.query.url,
+        url,
         headers: {
             'Content-Type': req.header('Content-Type'),
             'Authorization': req.header('Authorization')
         }
     }
     request(options, (err, response, body) => {
-        if (err) { return console.log(err); }
+        if (err) { return res.send(err); }
         res.send(body)
     });
 });
