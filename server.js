@@ -14,6 +14,7 @@ app.use(function(req, res, next) {
     'Access-Control-Allow-Headers',
     'Authorization, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-CSRF-Token',
   )
+    res.setHeader('access-control-expose-headers', 'X-CSRF-Token')
   next()
 })
 
@@ -36,7 +37,10 @@ const action = function(req, res) {
     if (err) {
       return res.send(err)
     }
-    res.headers = response.headers
+    const csrfToken = response.headers['x-csrf-token']
+    if (csrfToken) {
+      res.set('X-CSRF-Token', csrfToken)
+    }
     res.send(body)
   })
 }
