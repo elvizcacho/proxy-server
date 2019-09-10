@@ -28,6 +28,7 @@ const action = function(req, res) {
     }
     request(options, (err, response, body) => {
         if (err) { return res.send(err); }
+        res.headers = response.headers
         res.send(body)
     });
 }
