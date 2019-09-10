@@ -21,6 +21,7 @@ const action = function(req, res) {
     const options = {
         url,
         headers: {
+            'X-CSRF-Token': req.header('X-CSRF-Token'),
             'Content-Type': req.header('Content-Type'),
             'Authorization': req.header('Authorization')
         }
