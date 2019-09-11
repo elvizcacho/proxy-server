@@ -2,6 +2,11 @@ const express = require('express')
 const app = express()
 const request = require('request')
 const qs = require('qs')
+const bodyParser = require('body-parser')
+const cors = require('cors')
+
+
+app.use(bodyParser.json())
 
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -12,46 +17,43 @@ app.use(function(req, res, next) {
   )
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Authorization, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-CSRF-Token',
+    'set-cookie, Cookie, Authorization, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-CSRF-Token',
   )
-    res.setHeader('access-control-expose-headers', 'X-CSRF-Token')
+    res.setHeader('access-control-expose-headers', 'X-CSRF-Token, set-cookie')
   next()
 })
 
 const action = function(req, res) {
+
   if (!req.params[0]) {
     return res.send('Please add an url after /')
   }
-
   const url = `${req.params[0]}?${qs.stringify(req.query)}`
 
+  const headers = {...req.headers}
+  delete headers.host
+  delete headers['accept-encoding']
+  delete headers['content-length']
+
   const options = {
+    method: req.method,
     url,
-    headers: {
-      'X-CSRF-Token': req.header('X-CSRF-Token'),
-      'Content-Type': req.header('Content-Type'),
-      Authorization: req.header('Authorization'),
-    },
+    headers,
+    ...(req.body) ? {body: req.body} : {},
+    json: true
   }
   request(options, (err, response, body) => {
     if (err) {
       return res.send(err)
     }
-    const csrfToken = response.headers['x-csrf-token']
-    if (csrfToken) {
-      res.set('X-CSRF-Token', csrfToken)
+    for (const header of Object.keys(response.headers)) {
+      res.set(header, response.headers[header])
     }
     res.send(body)
   })
 }
 
-app.post('/*', action)
-app.get('/*', action)
-app.head('/*', action)
-app.put('/*', action)
-app.patch('/*', action)
-app.delete('/*', action)
-app.options('/*', action)
+app.all('/*', cors(), action)
 
 app.listen(process.env.PORT || 3000, function() {
   console.log(`Example app listening on port ${process.env.PORT} or 3000!`)
