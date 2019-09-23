@@ -17,7 +17,15 @@ app.use(function(req, res, next) {
   )
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'set-cookie, Cookie, Authorization, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-CSRF-Token',
+    'set-cookie, Cookie, ' +
+      'Authorization, ' +
+      'Access-Control-Allow-Credentials, ' +
+      'Access-Control-Allow-Headers, ' +
+      'Origin,Accept, X-Requested-With, ' +
+      'Content-Type, ' +
+      'Access-Control-Request-Method, ' +
+      'Access-Control-Request-Headers, ' +
+      'X-CSRF-Token',
   )
     res.setHeader('access-control-expose-headers', 'X-CSRF-Token, set-cookie')
   next()
