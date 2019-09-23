@@ -63,7 +63,7 @@ const action = function(req, res) {
   })
 }
 
-app.all('/*', cors(), action)
+app.all('/*', action)
 
 app.listen(process.env.PORT || 3000, function() {
   console.log(`Example app listening on port ${process.env.PORT} or 3000!`)
