@@ -22,7 +22,7 @@ const headerList =
     'X-CSRF-Token';
 
 app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'webservice2.minol.com')
+  res.setHeader('Access-Control-Allow-Origin', 'https://webservice2.minol.com')
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader(
     'Access-Control-Allow-Methods',
